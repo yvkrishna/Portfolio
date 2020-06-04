@@ -280,7 +280,9 @@ function authenticationMiddleware() {
 	}
 } 
 
-app.listen(8008,function()
+app.set('port',process.env.PORT||5000)
+
+app.listen(app.get('port'),function()
 {
 	console.log("SERVER STARTED SUCCESSFULLY................")
 })
