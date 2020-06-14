@@ -1,0 +1,21 @@
+{
+	"name": "Smriti A Friend And Assistant",
+	"short_name": "Smriti",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#fff",
+	"theme_color":"#40E0D0",
+	"orientation":"portrait-primary",
+	"icons":[
+		{
+			"src":"logo2.jpg",
+			"type":"image/jpg",
+			"sizes":"99x99"
+		},
+		{
+			"src":"logo1.jpg",
+			"type":"image/jpg",
+			"sizes":"198x198"
+		}
+	]
+}

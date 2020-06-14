@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Profile Page</title>
+	<title>Progress</title>
   <link rel="shortcut icon" href="logo1.jpg">
   <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/dacf88b734.js" crossorigin="anonymous"></script>
@@ -35,19 +35,19 @@ body {
       transition: 0.3s;
       margin-left: 30px;
     }
-    .logo{
-        width: 75%;
-        height: 156px;
-        margin-left: 55px;
-      }
-    .sidenav a:hover {
-      color: #f1f1f1;
-    }
     .nav_img{
           width: 68%;
           position: absolute;
           left: 24%;
           bottom: 20px;
+      }
+    .sidenav a:hover {
+      color: #f1f1f1;
+    }
+    .logo{
+        width: 75%;
+        height: 156px;
+        margin-left: 55px;
       }
     .sidenav .closebtn {
       position: absolute;
@@ -64,6 +64,13 @@ body {
 }
 ::-webkit-scrollbar{
       width: 0;
+    }
+    .progress{
+      width: 82%;
+      margin-left: 8%;
+    }
+    .move-small{
+      margin-left: 5%;
     }
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
@@ -92,7 +99,7 @@ body {
       </div>
       <div class="col-md-10 col-sm-10 col-10">
         <h4 class="alert-heading">Welcome <%= data[0].name %> !!!</h4>
-        <p class="bd-lead font-weight-lighter">Edit your Profile Details.</p>
+        <p class="bd-lead font-weight-lighter">Customize Your Tasks.</p>
         <hr>
         <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
       </div>
@@ -103,26 +110,30 @@ body {
 <div class="row">
   <div class="col-md-4 col-sm-4 col-1"></div>
   <div class="col-md-4 col-sm-4 col-10">
-    <h4 class="font-weight-light lead projtitle font-size-29">General Settings</h4>
+    <h4 class="font-weight-light lead projtitle font-size-29">My Progress</h4>
   </div>
   <div class="col-md-4 col-sm-4 col-1"></div>
-</div>
+</div><br>
 
   <div class="row">
-  <div class="col-md-2 col-sm-2 col-1"></div>
-  <div class="col-md-7 col-sm-7 col-10">
-    <form action="/save-basic-profile" method="POST">
+  <div class="col-md-5 col-sm-5 col-10">
+    <figure class="figure">
+      <img src="work_progress.svg" class="figure-img img-fluid rounded" style="width: 82%;
+      margin-left: 8%;">
+    </figure>
+       <!--  <img src="work_progress.svg" class="progress"> -->
+  </div>
+  <div class="col-md-4 col-sm-4 col-10 move-small">
   <div class="form-group">
-    <label for="exampleInputFullname" class="lead">Full Name</label>
-    <input type="text" class="form-control" id="exampleInputFullname" required name="fname"
-    placeholder= <%- JSON.stringify(data[0].name) %> >
+    <label for="exampleInputNumber1" class="lead">Number Of Completed Tasks</label>
+    <input type="number" class="form-control" id="exampleInputNumber1"  readonly  
+    placeholder=<%- JSON.stringify(data[0].completed_tasks) %>>
   </div>
   <div class="form-group">
-    <label for="exampleInputEmail1" class="lead">Email address</label>
-    <input type="email" class="form-control" required id="exampleInputEmail1" aria-describedby="emailHelp" name="username" placeholder=<%- JSON.stringify(data[0].email) %>>
+    <label for="exampleInputNumber2" class="lead">Number Of Deleted Tasks</label>
+    <input type="number" class="form-control" id="exampleInputNumber2" readonly
+    placeholder=<%- JSON.stringify(data[0].deleted_tasks) %>>
   </div>
-  <button type="submit" class="btn btn-primary">Save Changes</button>
-</form>
   </div>
   <div class="col-md-3 col-sm-3 col-1"></div>
 </div>

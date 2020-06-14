@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Login</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Home Page</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 	<script src="https://kit.fontawesome.com/dacf88b734.js" crossorigin="anonymous"></script>
@@ -52,6 +53,12 @@
 		  font-size: 36px;
 		  margin-left: 50px;
 		}
+		.nav_img{
+	        width: 68%;
+	        position: absolute;
+	        left: 24%;
+	        bottom: 20px;
+	    }
 	</style>
 </head>
 <body>
@@ -65,17 +72,20 @@
 			  <a href="/">Home</a>
 			  <a href="/about">About</a>
 			  <a href="/account">My Account</a>
-			  <a href="#">Clients</a>
-			  <a href="#">Contact</a>
 			  <a href="/signout">Sign Out</a>
+			  <img src="navigator.svg" class="nav_img">
 		  </div>
 			<span style="font-size:30px;cursor:pointer" class="icon" onclick="openNav()">&#9776;</span>
       </div>
       <div class="col-md-10 col-sm-10 col-10">
-        <h4 class="alert-heading">Welcome <%= data[1].name %> !!!</h4>
-        <p class="bd-lead font-weight-lighter">My name is ____ ! I am happy to see you here. I am your Daily Planner. Plan Your Today's Events. &#128512;</p>
+        <h4 class="alert-heading">Welcome <%= data[1].user_details.name %> !!!</h4>
+        <p class="bd-lead font-weight-lighter">My name is Smriti ! I am happy to see you here. I am your Daily Planner. Plan Your Today's Events. &#128512;</p>
         <hr>
-        <p class="mb-0">Your next deadline work is approaching sooner</p>
+        <p class="mb-0 tc"></p>
+				<span id="hour" class="text-danger"></span>
+				<span id="minute" class="text-danger"></span>
+				<span id="second" class="text-danger"></span>
+			<span class="addhere"></span>
       </div>
   </div>
 </div>
@@ -105,13 +115,13 @@
 					<div class="md-form md-outline">
 					  <label for="default-picker">Pick Start Time</label>
 					  <input type="time" id="default-picker" class="form-control td st" 
-					  value='01:00' required name="timestart">
+					  required name="timestart">
 					  <input class="start_meridian" type="text" style="display:none;" 
 					  name="start_meridian"></p>
 					</div>
 					<div class="md-form md-outline">
 					  <label for="default-picker">Pick End Time</label>
-					  <input type="time" id="default-picker" class="form-control td et" value='12:00' required name="timestop">
+					  <input type="time" id="default-picker" class="form-control td et"  required name="timestop">
 					  <input class="end_meridian" type="text" style="display:none;" name="end_meridian">
 					</div><br>
 					<div class="d-flex justify-content-around">
@@ -142,10 +152,10 @@
 				    <p class="card-text lead"><%= item.taskdisc %></p>
 				    <div class="d-flex justify-content-left">
 				    	<button type="button" class="btn btn-success rem"
-				    	onclick='complete(<%- JSON.stringify(item.taskname) %>)'>
+				    	onclick='complete(<%- JSON.stringify(item.taskname) %>,this)'>
 				    		<a class="comp">Completed</a></button>
 				    	<button type="button" class="btn btn-danger rem" 
-				    	onclick='reject(<%- JSON.stringify(item.taskname) %>)'>
+				    	onclick='reject(<%- JSON.stringify(item.taskname) %>,this)'>
 				    		<a class="del">Delete</a></button>
 				    </div>
 				  </div>
@@ -168,6 +178,8 @@
 <script>
 	var user_data = <%- JSON.stringify(data) %>;
 	var arr = []
+	var time_start = [];
+	var time_end = [];
 	document.querySelector(".clear").addEventListener("click",function(){
 		document.querySelectorAll(".td").forEach(function(item){
 	  			item.value=""
@@ -175,32 +187,6 @@
 	})
 	
 	document.querySelector(".a").addEventListener("click",function(){
-		var start_time = document.querySelector('.st').value;
-		var end_time = document.querySelector(".et").value;
-
-		if(user_data[1].user_details.clk_format_is_12){
-
-			var hourEnd = start_time.indexOf(":");
-			var H = +start_time.substr(0, hourEnd);
-			var h = H % 12 || 12;
-			var ampm = H < 12 ? "AM" : "PM";
-			start_time = h + start_time.substr(hourEnd, 3) + " " +ampm;
-
-			var hourEnd = end_time.indexOf(":");
-			var H = +end_time.substr(0, hourEnd);
-			var h = H % 12 || 12;
-			var ampm = H < 12 ? "AM" : "PM";
-			end_time = h + end_time.substr(hourEnd, 3) + " " +ampm;
-
-			document.querySelector('.st').value = h + start_time.substr(hourEnd, 3);
-			document.querySelector(".et").value = h + end_time.substr(hourEnd, 3);
-
-			document.querySelector(".start_meridian").value = ampm;
-			document.querySelector(".end_meridian").value = ampm;
-		}else{
-			document.querySelector(".start_meridian").value = "";
-			document.querySelector(".end_meridian").value = "";
-		}
 		var error_log = []
 			document.querySelectorAll(".td").forEach(function(item){
 			    if(item.value==""){
@@ -212,11 +198,14 @@
 			document.querySelector(".a").form.submit()
 		}
 	});
-	function complete(taskName){
-		document.querySelector(".comp").href="/taskAccomplished/"+taskName;
+
+	function complete(taskName,elem){
+		a_tag = elem.querySelector('a')
+		a_tag.href="/taskAccomplished/"+taskName;
 	}
-	function reject(taskName){
-		document.querySelector(".del").href="/deleteTask/"+taskName;
+	function reject(taskName,elem){
+		a_tag = elem.querySelector('a')
+		a_tag.href="/deleteTask/"+taskName;
 	}
 	function openNav() {
 	  document.getElementById("mySidenav").style.width = "250px";
@@ -224,6 +213,165 @@
 	function closeNav() {
 	  document.getElementById("mySidenav").style.width = "0";
 	}
+
+
+	function convert_12_to_24(time){
+		var hrs = Number(time.match(/^(\d+)/)[1]);
+		var mnts = Number(time.match(/:(\d+)/)[1]);
+		var format = time.match(/\s(.*)$/)[1];
+		if (format == "PM" && hrs < 12) hrs = hrs + 12;
+		if (format == "AM" && hrs == 12) hrs = hrs - 12;
+		var hours = hrs.toString();
+		var minutes = mnts.toString();
+		if (hrs < 10) hours = "0" + hours;
+		if (mnts < 10) minutes = "0" + minutes;
+		return hours + ":" + minutes;
+	}
+	
+	if(!user_data[0].task_data.length==0){
+		var now = new Date();
+	var h_now = now.getHours();
+		m_now = now.getMinutes();
+	var subtract_time = [];
+	var lowest_hour = 0;
+	var lowest_minute = 0;
+	var tasks = [];
+	for(var i=0;i<user_data[0].task_data.length;i++){
+		var endtime = convert_12_to_24(user_data[0].task_data[i].endtime);
+		var starttime = convert_12_to_24(user_data[0].task_data[i].timestart);
+
+		var [ h_endtime, m_endtime ] = endtime.split(":");
+		var [ h_starttime, m_starttime ] = starttime.split(":");
+
+		h_starttime = parseInt(h_starttime)
+		m_starttime = parseInt(m_starttime)
+		h_endtime = parseInt(h_endtime)
+		m_endtime = parseInt(m_endtime)
+		var subtract_h_end = h_endtime - h_now;
+			subtract_m_end = m_endtime - m_now;
+			subtract_h_start = h_starttime - h_now;
+			subtract_m_start = m_starttime - m_now;
+
+		subtract_time.push(subtract_h_end*60+subtract_m_end);
+		tasks.push(user_data[0].task_data[i].taskname)
+
+		}
+		// console.log(subtract_time);
+		const min = Math.min(...subtract_time)
+		var ind = subtract_time.indexOf(min);
+		var low_task_name = tasks[subtract_time.indexOf(min)];
+		var time = user_data[0].task_data[ind].endtime;
+		et = convert_12_to_24(time)
+		var [ h_et, m_et ] = et.split(":");
+		// console.log(h_et,m_et)
+		var month = new Array();
+		month[0] = "January";
+		month[1] = "February";
+		month[2] = "March";
+		month[3] = "April";
+		month[4] = "May";
+		month[5] = "June";
+		month[6] = "July";
+		month[7] = "August";
+		month[8] = "September";
+		month[9] = "October";
+		month[10] = "November";
+		month[11] = "December";
+		var date_param = month[now.getMonth()]+" "+now.getDate().toString()+", "+now.getFullYear().toString()+" "+h_et+":"+m_et+":00";
+
+			var p = document.createElement('p');
+			p.setAttribute('class','embededp')
+			p.innerHTML = "Your next deadline work is "
+			var span1 = document.createElement('span');
+			var span2 = document.createElement('span');
+			span1.setAttribute('class','text-danger'); 
+			span1.innerHTML = low_task_name
+			span2.innerHTML = ". Try to complete as quickly as possible. You have "
+			p.appendChild(span1);
+			p.appendChild(span2);
+			document.querySelector(".tc").appendChild(p);
+			document.querySelector(".addhere").innerText = " more to complete your task."
+
+		var countDate = new Date(date_param).getTime();
+		function newYear(){
+			var now = new Date().getTime();
+				gap = countDate - now;
+				var second = 1000;
+				var minute = second*60;
+				var hour = minute*60;
+				var day = hour*24;
+
+				var d = Math.floor(gap / (day));
+				var h = Math.floor((gap % (day))/(hour));
+				var m = Math.floor((gap % (hour))/(minute));
+				var s = Math.floor((gap % (minute))/(second));
+
+				var res = [h,m,s];
+			
+			return res
+
+		}
+		var timer = setInterval(function(){
+			var is_started = true;
+			for(var i=0;i<user_data[2].res.length;i++){
+				var inde = user_data[2].res[i].indexOf(low_task_name)
+
+				if(inde!=-1){
+					if(user_data[2].res[i].includes("not yet started")){
+						is_started=false
+					}
+				}
+			}
+			// console.log(user_data[2].res);
+			// console.log(is_started);
+			if(is_started){
+				
+				var result = newYear();
+				var [h,m,s] = result
+				if(!(h<0) && !(m<0) && !(s<0)){
+					document.getElementById('hour').innerText = h.toString() + " Hours";
+					document.getElementById('minute').innerText = m.toString() + " Minutes";
+					document.getElementById('second').innerText = s.toString() + " Seconds";
+				}
+				else{
+					document.querySelector(".embededp").innerHTML = ""
+					document.querySelector(".addhere").innerHTML = ""
+					p = document.querySelector(".tc")
+					var span0 = document.createElement('span');
+					span0.innerText = "Your Task "
+					p.appendChild(span0);
+					var span1 = document.createElement('span');
+					span1.setAttribute('class','text-danger'); 
+					span1.innerHTML = low_task_name
+					p.appendChild(span1);
+					var span2 = document.createElement('span');
+					span2.innerText =  " has exceeded the given time bound ."
+					p.appendChild(span2);
+					document.getElementById('hour').innerHTML=""
+					document.getElementById('minute').innerHTML=""
+					document.getElementById('second').innerText=""
+					clearInterval(timer);
+				}
+			}
+			else{
+				document.querySelector(".embededp").innerHTML = ""
+				document.querySelector(".addhere").innerHTML = ""
+				var span0 = document.createElement('span');
+				p = document.querySelector(".tc")
+				span0.innerText = "Your next task is "
+				p.appendChild(span0);
+				var span1 = document.createElement('span');
+				span1.setAttribute('class','text-danger'); 
+				span1.innerHTML = low_task_name+"."
+				p.appendChild(span1);
+				clearInterval(timer);
+			}
+			
+		},1000);
+	}else{
+		document.querySelector(".tc").innerText = "It seems that you dant have any tasks presently. Enjoy your free time"
+	}
+	//console.log(user_data[2].res)
 </script>
 
 

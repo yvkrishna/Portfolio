@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Login</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -40,7 +41,7 @@
 			  	<div class="row">
 			  		<div class="col-md-2 col-sm-4 col-1"></div>
 					<div class="col-md-8 col-sm-4 col-10">
-						<h4 class="display-4">Member Login</h4>
+						<h4 class="display-4">Member Register</h4>
 					</div>
 					<div class="col-md-2 col-sm-4 col-1"></div>
 			  	</div>
@@ -56,8 +57,8 @@
 					<div class="col-md-2 col-sm-4 col-1"></div>
 			  	</div>
 			  	<div class="row">
-			  		<div class="col-md-4 col-sm-4 col-1"></div>
-					<div class="col-md-4 col-sm-4 col-10">
+			  		<div class="col-md-4 col-sm-2 col-1"></div>
+					<div class="col-md-4 col-sm-8 col-10">
 						<div id="register">
 							<form action="/register-done" method="POST">
 								<div class="fullname">
@@ -95,11 +96,14 @@
 						    		</div>
 						    	</div>
 						    	<button type="button" class="btn btn-success register" 
-						    	onclick="checking()">Register</button>
+						    	onclick="checking()" style="width: 100%;">Register</button><br><br>
+						    </div><span class="text-danger" style="font-size: 17px;">Already Having an account ?
+						    </span>
+						    <a href="/login"><input type="button" class="btn btn-warning" value="Sign In" style="width: 100%;margin-top: 15px;"></a>
 					    </form>
 					    </div>
 					</div>
-					<div class="col-md-4 col-sm-4 col-1"></div>
+					<div class="col-md-4 col-sm-2 col-1"></div>
 			  	</div>
 			  </div>
 			</div>
